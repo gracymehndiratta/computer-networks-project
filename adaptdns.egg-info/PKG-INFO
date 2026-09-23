@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: adaptdns
+Version: 0.1.0
+Summary: AdaptDNS: hybrid two-stage DNS-tunneling detection over encrypted DoH/DoT flows
+Requires-Python: >=3.10
+Requires-Dist: numpy>=1.26
+Requires-Dist: scikit-learn>=1.4
+Requires-Dist: pandas>=2.1
+Requires-Dist: matplotlib>=3.8
+Provides-Extra: pcap
+Requires-Dist: scapy>=2.5; extra == "pcap"
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"
