@@ -5,3 +5,4 @@ artifacts/
 *.pcap
 *.pcapng
 .DS_Store
+*.egg-info/
