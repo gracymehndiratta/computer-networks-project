@@ -7,6 +7,7 @@ Requires-Dist: numpy>=1.26
 Requires-Dist: scikit-learn>=1.4
 Requires-Dist: pandas>=2.1
 Requires-Dist: matplotlib>=3.8
+Requires-Dist: certifi>=2024.0
 Provides-Extra: pcap
 Requires-Dist: scapy>=2.5; extra == "pcap"
 Provides-Extra: dev
