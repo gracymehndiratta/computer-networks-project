@@ -1,4 +1,4 @@
-# AdaptDNS — Architecture Design of the Proposed Work (Case Study 2)
+# AdaptDNS — Architecture Design of the Proposed Work 
 
 **Computer Networks · Team:** Gracy Mehndiratta (24BCE2987), Tejas Venjane (24BCE0308), Manan Kulshrestha (24BCE0262)
 
