@@ -34,7 +34,7 @@ def print_report(cfg: Config, result) -> None:
     print(f"  escalation recall — tunnels (train): {m['escalation_recall_train']:.2%}")
     print(f"  escalation recall — tunnels (test) : {m['escalation_recall_test']:.2%}")
 
-    print("\n-- Stage 2: blackhole probing + fusion + Random Forest " + "-" * 11)
+    print(f"\n-- Stage 2: blackhole probing + fusion + {cfg.classifier_kind.upper()} classifier")
     print(f"  escalated test flows               : {int(m['stage2_test_flows'])}")
     print(f"  precision / recall / F1            : {m['stage2_precision']:.3f} / "
           f"{m['stage2_recall']:.3f} / {m['stage2_f1']:.3f}")
@@ -66,7 +66,7 @@ def print_report(cfg: Config, result) -> None:
     print(f"  benign baseline entries            : {result.baseline.benign_count}")
     print(f"  signatures (separate path)         : {result.baseline.signature_count}")
 
-    print("\n-- Top 10 features (Random Forest) " + "-" * 32)
+    print(f"\n-- Top 10 features ({cfg.classifier_kind.upper()})")
     for name, imp in list(result.classifier.feature_importances().items())[:10]:
         print(f"  {name:<40} {imp:.4f}")
 
@@ -125,6 +125,9 @@ def main() -> int:
     ap.add_argument("--benign", type=int, default=1200)
     ap.add_argument("--tunnel", type=int, default=300)
     ap.add_argument("--adaptive", type=int, default=300)
+    ap.add_argument("--classifier", default="rf",
+                    choices=["rf", "xgboost"],
+                    help="classifier backend (rf or xgboost)")
     ap.add_argument("--no-plots", action="store_true")
     args = ap.parse_args()
 
@@ -134,6 +137,7 @@ def main() -> int:
         n_benign=args.benign,
         n_tunnel=args.tunnel,
         n_adaptive=args.adaptive,
+        classifier_kind=args.classifier,
     )
     result = run_experiment(cfg)
     print_report(cfg, result)

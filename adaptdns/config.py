@@ -27,10 +27,22 @@ class Config:
     retry_bins: int = 8
     retry_history_size: int = 500  # benign retry samples kept in the baseline
 
-    # --- Random Forest classification engine -----------------------------
+    # --- Classification engine -------------------------------------------
+    # "rf"      -> scikit-learn RandomForestClassifier (default, paper baseline)
+    # "xgboost" -> XGBoost gradient-boosted trees
+    classifier_kind: str = "rf"
     n_estimators: int = 300
     rf_max_depth: int | None = None
     class_weight: str = "balanced"
+
+    # XGBoost-specific hyperparameters (used only when classifier_kind="xgboost")
+    xgboost_max_depth: int = 6
+    xgboost_learning_rate: float = 0.1
+    xgboost_subsample: float = 0.8
+    xgboost_colsample_bytree: float = 0.8
+    xgboost_min_child_weight: int = 1
+    xgboost_scale_pos_weight: float | None = None  # None -> let the model learn
+    xgboost_eval_metric: str = "logloss"
 
     # --- Synthetic data generation ---------------------------------------
     n_benign: int = 1200

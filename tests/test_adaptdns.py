@@ -171,3 +171,19 @@ def test_intermediate_strength_holds_budget_and_detection():
     # distributional retry features should not lag point ratios here
     assert (m["ablation_retry_detect_adaptive"]
             >= m["ablation_point_ratio_detect_adaptive"] - 0.10)
+
+
+def test_xgboost_backend_matches_rf_quality():
+    """The optional XGBoost backend should satisfy the same end-to-end
+    quality gates as the default Random Forest."""
+    pytest.importorskip("xgboost")
+    cfg = Config(classifier_kind="xgboost", n_benign=300, n_tunnel=80,
+                 n_adaptive=80, n_estimators=150, seed=7)
+    result = run_experiment(cfg)
+    m = result.metrics
+    assert m["escalation_rate_benign_test"] <= cfg.escalation_budget + 0.05
+    assert m["stage2_f1"] > 0.80
+    assert m["stage2_fpr"] < 0.15
+    assert m["e2e_detection_rate"] > 0.45
+    assert m["detect_rate_adaptive_tunnel"] > 0.85
+    assert result.classifier.feature_importances()

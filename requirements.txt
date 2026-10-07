@@ -2,6 +2,7 @@ numpy>=1.26
 scikit-learn>=1.4
 pandas>=2.1
 matplotlib>=3.8
+xgboost>=2.0
 certifi>=2024.0     # trusted CA bundle for the gateway's upstream DoH forward
 # Optional: needed only for pcap ingestion (adaptdns.pcap.ingest)
 # scapy>=2.5

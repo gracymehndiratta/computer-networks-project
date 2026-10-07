@@ -12,6 +12,7 @@ dependencies = [
     "scikit-learn>=1.4",
     "pandas>=2.1",
     "matplotlib>=3.8",
+    "xgboost>=2.0",
     "certifi>=2024.0",
 ]
 

@@ -24,7 +24,7 @@ flowchart LR
         F --> H
     end
     B --> H
-    H --> I["Random Forest<br/>Classification Engine"]
+    H --> I["Classification Engine<br/>(RF / XGBoost)"]
     I --> J["Verdict &amp; Alerting<br/>(SOC review)"]
     I -. "analyst-confirmed benign only<br/>(feedback loop)" .-> B
 ```
@@ -46,7 +46,7 @@ confirmed-malicious detections go to a separate signature path.
 | Retry-Behaviour Distribution Analyzer | `adaptdns/stage2/retry.py` (distributions + KS distance vs baseline, not point ratios) |
 | Resolver-Side Traditional DNS Feature Extractor | `adaptdns/stage2/dns_features.py` (exactly 11 features, runs in parallel with probing) |
 | Hybrid Feature Fusion | `adaptdns/fusion.py` |
-| Random Forest Classification Engine | `adaptdns/classifier.py` |
+| Classification Engine (RF / XGBoost) | `adaptdns/classifier.py` |
 | Detection Verdict & Alerting | `adaptdns/classifier.py` (`verdicts()`) |
 | Baseline Update (feedback loop) | `adaptdns/baseline.py` (benign baseline ⟂ signature store) |
 | End-to-end orchestration | `adaptdns/pipeline.py` |
@@ -93,8 +93,22 @@ curl --doh-url https://127.0.0.1:8443/dns-query -k --doh-insecure https://exampl
 curl -k -X POST http://localhost:9080/admin/blackhole -d '{"pattern": "example.com"}'
 curl -k http://localhost:9080/admin/flows          # observed retry delays
 
-.venv/bin/python -m pytest tests/ -q                # test suite (11 tests)
+.venv/bin/python -m pytest tests/ -q                # test suite (12 tests)
 ```
+
+### Using XGBoost instead of Random Forest
+
+The classifier backend is configurable via `Config.classifier_kind` (`"rf"` by default):
+
+```python
+from adaptdns.config import Config
+from adaptdns.pipeline import run_experiment
+
+cfg = Config(classifier_kind="xgboost")   # or "rf"
+result = run_experiment(cfg)
+```
+
+Tune XGBoost-specific hyperparameters in `Config` (`xgboost_max_depth`, `xgboost_learning_rate`, etc.). On macOS, XGBoost requires the OpenMP runtime; install it with `brew install libomp` if import fails.
 
 Plots are written to `artifacts/` (`confusion_matrix.png`,
 `feature_importances.png`, `sweep_budget.png`, `sweep_robustness.png`).
